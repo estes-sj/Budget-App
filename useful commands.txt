@@ -1,0 +1,14 @@
+ 
+ In flask-server folder
+ python -m venv venv    
+.\venv\Scripts\activate
+
+
+in client folder npm start\
+
+
+install
+Start redis
+.'C:\Program Files\redis\redis-cli'
+
+install aegis
