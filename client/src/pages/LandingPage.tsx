@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import httpClient from "../httpClient";
+import "./login.css";
 import { User } from "../types";
 
 const LandingPage: React.FC = () => {
@@ -22,11 +23,13 @@ const LandingPage: React.FC = () => {
   }, []);
 
   return (
-    <div>
-      <h1>Welcome to this React Application</h1>
+    <>
+    <body>
+    <header><div className="top">Budget Application</div></header>
+    <div className="panel">
       {user != null ? (
         <div>
-          <h2>Logged in</h2>
+          <h2>Welcome! Logged in</h2>
           <h3>ID: {user.id}</h3>
           <h3>Email: {user.email}</h3>
 
@@ -34,18 +37,21 @@ const LandingPage: React.FC = () => {
         </div>
       ) : (
         <div>
-          <p>You are not logged in</p>
-          <div>
+          <h2 className="pricing-header">Currently Not Signed-In</h2>
+          <div className="buttons">
             <a href="/login">
-              <button>Login</button>
+              <button className="pricing-button is-featured">Login</button>
             </a>
             <a href="/register">
-              <button>Register</button>
+              <button className="pricing-button">Register</button>
             </a>
           </div>
         </div>
       )}
     </div>
+    </body>
+    </>
+    
   );
 };
 
