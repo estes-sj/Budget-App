@@ -78,4 +78,4 @@ def logout_user():
     return "200"
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='10.100.0.2',debug=True)

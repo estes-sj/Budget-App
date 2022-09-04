@@ -7,14 +7,14 @@ const LandingPage: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
 
   const logoutUser = async () => {
-    await httpClient.post("//localhost:5000/logout");
+    await httpClient.post("//10.100.0.2:5000/logout");
     window.location.href = "/";
   };
 
   useEffect(() => {
     (async () => {
       try {
-        const resp = await httpClient.get("//localhost:5000/@me");
+        const resp = await httpClient.get("//10.100.0.2:5000/@me");
         setUser(resp.data);
       } catch (error) {
         console.log("Not authenticated");

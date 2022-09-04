@@ -9,7 +9,7 @@ const LoginPage: React.FC = () => {
     console.log(email, password);
 
     try {
-      const resp = await httpClient.post("//localhost:5000/login", {
+      const resp = await httpClient.post("//10.100.0.2:5000/login", {
         email,
         password,
       });

@@ -7,7 +7,7 @@ const RegisterPage: React.FC = () => {
 
   const registerUser = async () => {
     try {
-      const resp = await httpClient.post("//localhost:5000/register", {
+      const resp = await httpClient.post("//10.100.0.2:5000/register", {
         email,
         password,
       });
