@@ -7,15 +7,17 @@ load_dotenv()
 
 config = configparser.ConfigParser()
 config.read_file(open(r'server_config.txt'))
-ip_address = config.get('Server Config', 'sql_address')
+
+userpass = config.get('Server Config', 'userpass')
+basedir = config.get('Server Config', 'basedir')
+dbname = config.get('Server Config', 'dbname')
 
 class ApplicationConfig:
     SECRET_KEY = os.environ["SECRET_KEY"]
 
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_TRACK_MODIFICATIONS = True
     SQLALCHEMY_ECHO = True
-    SQLALCHEMY_DATABASE_URI = r"sqlite:///./db.sqlite"
-
+    SQLALCHEMY_DATABASE_URI = userpass + basedir + dbname
     SESSION_TYPE = "redis"
     SESSION_PERMANENT = False
     SESSION_USE_SIGNER = True

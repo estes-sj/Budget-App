@@ -83,5 +83,12 @@ def logout_user():
     session.pop("user_id")
     return "200"
 
+@app.route('/')
+def testdb():
+    if db.session.query('1').from_statement('SELECT 1').all():
+        return 'It works.'
+    else:
+        return 'Something is broken.'
+
 if __name__ == "__main__":
     app.run(host=ip_address,debug=True)
