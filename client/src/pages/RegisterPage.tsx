@@ -17,6 +17,9 @@ const RegisterPage: React.FC = () => {
       if (error.response.status === 401) {
         alert("Invalid credentials");
       }
+      else if (error.response.status === 409) {
+        alert("Email is already taken");
+      }
     }
   };
 

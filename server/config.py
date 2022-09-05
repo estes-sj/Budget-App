@@ -1,8 +1,13 @@
+import configparser
 from dotenv import load_dotenv
 import os
 import redis
 
 load_dotenv()
+
+config = configparser.ConfigParser()
+config.read_file(open(r'server_config.txt'))
+ip_address = config.get('Server Config', 'sql_address')
 
 class ApplicationConfig:
     SECRET_KEY = os.environ["SECRET_KEY"]

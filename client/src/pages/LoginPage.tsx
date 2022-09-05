@@ -44,7 +44,8 @@ const LoginPage: React.FC = () => {
             id=""
           />
         </div>
-        <button type="button" onClick={() => logInUser()}>
+        <button type="button"
+          onClick={() => logInUser()}>
           Submit
         </button>
       </form>

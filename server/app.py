@@ -1,9 +1,11 @@
+from ipaddress import ip_address
 from flask import Flask, request, jsonify, session
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS, cross_origin
 from flask_session import Session
 from config import ApplicationConfig
 from models import db, User
+import configparser
 
 app = Flask(__name__)
 app.config.from_object(ApplicationConfig)
@@ -12,6 +14,10 @@ bcrypt = Bcrypt(app)
 CORS(app, supports_credentials=True)
 server_session = Session(app)
 db.init_app(app)
+
+config = configparser.ConfigParser()
+config.read_file(open(r'server_config.txt'))
+ip_address = config.get('Server Config', 'ip_address')
 
 with app.app_context():
     db.create_all()
@@ -78,4 +84,4 @@ def logout_user():
     return "200"
 
 if __name__ == "__main__":
-    app.run(host='10.100.0.2',debug=True)
+    app.run(host=ip_address,debug=True)
