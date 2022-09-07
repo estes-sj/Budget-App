@@ -4,7 +4,8 @@ from flask_bcrypt import Bcrypt
 from flask_cors import CORS, cross_origin
 from flask_session import Session
 from config import ApplicationConfig
-from models import db, User
+from models import db, User, Ledger
+import table_data
 import configparser
 
 app = Flask(__name__)
@@ -50,7 +51,7 @@ def register_user():
     new_user = User(email=email, password=hashed_password)
     db.session.add(new_user)
     db.session.commit()
-    
+
     session["user_id"] = new_user.id
 
     return jsonify({
@@ -89,6 +90,20 @@ def testdb():
         return 'It works.'
     else:
         return 'Something is broken.'
+
+@app.route('/ledger', methods = ['GET'])
+def get_ledger():
+    events = Ledger.query.order_by(Ledger.id.asc()).all()
+    event_list = []
+    for event in events:
+        event_list.append(format_event(event))
+    return {'event': event_list}
+
+def format_event(event):
+    return {
+        "id": event.id,
+        "description": event.description
+    }
 
 if __name__ == "__main__":
     app.run(host=ip_address,debug=True)
