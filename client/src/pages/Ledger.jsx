@@ -36,12 +36,11 @@ const Ledger = () => {
   }
   else {
     return (
-      <div className="App">
+      <div className="panel">
         <section>
-          <p>i'm pissed</p>
         <ul>
             {data.event.map((event, index) => {
-              return <li key={event.id}>{event.description}</li>
+              return <li key={event.id}>{event.id} {event.description}</li>
               
             })}
           </ul>
