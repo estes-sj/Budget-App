@@ -1,2 +1,4 @@
 
 server/server_config.txt
+server/.env
+server/.env
