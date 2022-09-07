@@ -99,9 +99,18 @@ def get_ledger():
         event_list.append(format_event(event))
     return {'event': event_list}
 
+@app.route('/ledger/<id>', methods = ['GET'])
+def get_event(id):
+    event = Ledger.query.filter_by(id=id).one()
+    formatted_event = format_event(event)
+    return {'event': formatted_event}
+
 def format_event(event):
     return {
         "id": event.id,
+        "email": event.email,
+        "cost": event.cost,
+        "created_at": event.created_at,
         "description": event.description
     }
 

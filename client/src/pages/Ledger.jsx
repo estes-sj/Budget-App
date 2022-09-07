@@ -7,6 +7,7 @@ const Ledger = () => {
 
   const [loading, isLoading] = useState(true)
 
+  const encodedValue = encodeURIComponent("someVariable");
 /* 
   const fetchEvents = async () => {
  
@@ -40,7 +41,7 @@ const Ledger = () => {
         <section>
         <ul>
             {data.event.map((event, index) => {
-              return <li key={event.id}>{event.id} {event.description}</li>
+              return <li key={event.id}>{event.id} {event.email} {event.cost} {event.created_at} {event.description} </li>
               
             })}
           </ul>
