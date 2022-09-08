@@ -1,3 +1,4 @@
+from datetime import datetime
 from ipaddress import ip_address
 from flask import Flask, request, jsonify, session
 from flask_bcrypt import Bcrypt
@@ -12,7 +13,7 @@ app = Flask(__name__)
 app.config.from_object(ApplicationConfig)
 
 bcrypt = Bcrypt(app)
-CORS(app, supports_credentials=True)
+CORS(app)
 server_session = Session(app)
 db.init_app(app)
 
@@ -91,6 +92,16 @@ def testdb():
     else:
         return 'Something is broken.'
 
+# create an event
+@app.route('/ledger', methods = ['POST'])
+def create_event():
+    description = request.json['description'];
+    event = Ledger(description)
+    db.session.add(event)
+    db.session.commit()
+    return format_event(event)
+
+# get all events
 @app.route('/ledger', methods = ['GET'])
 def get_ledger():
     events = Ledger.query.order_by(Ledger.id.asc()).all()
@@ -99,11 +110,29 @@ def get_ledger():
         event_list.append(format_event(event))
     return {'event': event_list}
 
+# get an event
 @app.route('/ledger/<id>', methods = ['GET'])
 def get_event(id):
     event = Ledger.query.filter_by(id=id).one()
     formatted_event = format_event(event)
     return {'event': formatted_event}
+
+# delete an event
+@app.route('/ledger/<id>', methods = ['DELETE'])
+def delete_event(id):
+    event = Ledger.query.filter_by(id=id).one()
+    db.session.delete(event)
+    db.session.commit()
+    return f'Event (id: {id}) deleted!'
+
+# edit an event
+@app.route('/ledger/<id>', methods = ['PUT'])
+def update_event(id):
+    event = Ledger.query.filter_by(id=id)
+    description = request.json['description']
+    event.update(dict(description = description, created_at = datetime.now()))
+    db.session.commit()
+    return {'event': format_event(event.one())}
 
 def format_event(event):
     return {
