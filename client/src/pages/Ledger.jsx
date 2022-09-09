@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import httpClient from "../httpClient";
 
@@ -6,20 +6,48 @@ const baseURL = "http://10.100.0.2:5000/ledger";
 const Ledger = () => {
   const [eventsList, setEvent] = useState([]);
   const [description, setDescription] = useState("");
-  const [loading, isLoading] = useState(true);
+  const [editDescription, setEditDescription] = useState("");
+  const [eventID, setEventID] = useState(null);
 
-  const handleChange = (e) => {
-    setDescription(e.target.value);
+  const [loading, isLoading] = useState(true);
+  const countRef = useRef(0);
+
+  const handleChange = (e, field) => {
+    if (field === "edit") {
+      setEditDescription(e.target.value);
+    } else {
+      setDescription(e.target.value);
+    }
+    countRef.current++;
+  };
+
+  const toggleEdit = (event) => {
+    setEventID(event.id);
+    setEditDescription(event.description);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const data = await axios.post("http://10.100.0.2:5000/ledger", {
-        description,
-      });
-      setEvent([...eventsList, data.data]);
+      if (editDescription) {
+        const data = await axios.put(`${baseURL}/${eventID}`, {
+          description: editDescription,
+        });
+        const updatedEvent = data.data.event;
+        const updatedList = eventsList.map((event) => {
+          if (event.id === eventID) {
+            return (event = updatedEvent);
+          }
+          return event;
+        });
+        setEvent(updatedList);
+      } else {
+        const data = await axios.post(`${baseURL}`, { description });
+        setEvent([...eventsList], data.data);
+      }
       setDescription("");
+      setEditDescription("");
+      setEventID(null);
     } catch (err) {
       console.error(err.message);
     }
@@ -30,6 +58,7 @@ const Ledger = () => {
       await axios.delete(`${baseURL}/${id}`);
       const updatedList = eventsList.filter((event) => event.id !== id);
       setEvent(updatedList);
+      countRef.current++;
     } catch (err) {
       console.error(err.message);
     }
@@ -49,7 +78,6 @@ const Ledger = () => {
       data = await data.json();
       setEvent(data);
       console.log(data.event);
-
       /*
       const data = await axios.get("http://10.100.0.2:5000/ledger");
       const { events } = data.data;
@@ -58,7 +86,7 @@ const Ledger = () => {
       isLoading(false);
     };
     fetchEvents();
-  }, []);
+  }, [countRef]);
   // make a nice looking loading screen
   if (loading) {
     return <h1>Loading...</h1>;
@@ -70,11 +98,12 @@ const Ledger = () => {
             <form onSubmit={handleSubmit}>
               <label htmlFor="description">Description</label>
               <input
-                onChange={handleChange}
+                onChange={(e) => handleChange(e, "description")}
                 type="text"
                 name="description"
                 id="description"
                 value={description}
+                placeholder="Name the transaction"
               />
               <button type="submit">Submit</button>
             </form>
@@ -84,13 +113,31 @@ const Ledger = () => {
           <section>
             <ul>
               {eventsList.event.map((event, index) => {
-                return (
-                  <li style={{ display: "Flex" }} key={event.id}>
-                    {event.id} {event.email} {event.cost} {event.created_at}{" "}
-                    {event.description}{" "}
-                    <button onClick={() => handleDelete(event.id)}>X</button>
-                  </li>
-                );
+                if (eventID === event.id) {
+                  return (
+                    <li>
+                      <form onSubmit={handleSubmit} key={event.id}>
+                        <input
+                          onChange={(e) => handleChange(e, "edit")}
+                          type="text"
+                          name="editDescription"
+                          id="editDescription"
+                          value={editDescription}
+                        />
+                        <button type="submit">Submit</button>
+                      </form>
+                    </li>
+                  );
+                } else {
+                  return (
+                    <li style={{ display: "Flex" }} key={event.id}>
+                      {event.id} {event.email} {event.cost} {event.created_at}{" "}
+                      {event.description}{" "}
+                      <button onClick={() => toggleEdit(event)}>Edit</button>
+                      <button onClick={() => handleDelete(event.id)}>X</button>
+                    </li>
+                  );
+                }
               })}
             </ul>
           </section>
