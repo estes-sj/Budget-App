@@ -25,7 +25,7 @@ class Ledger(db.Model):
     description = db.Column(db.String(345), unique=False, default="")
 
     def __repr__(self):
-        return f'Email: {self.email}'
+        return f'Event: {self.description}'
     
     def __init__(self, description):
         self.description = description

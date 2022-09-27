@@ -56,8 +56,16 @@ const Ledger = () => {
   const handleDelete = async (id) => {
     try {
       await axios.delete(`${baseURL}/${id}`);
+      console.log("0");
+      console.log(eventsList);
+      console.log("1");
+      console.log(Object.values(eventsList));
       const updatedList = eventsList.filter((event) => event.id !== id);
-      setEvent(updatedList);
+      console.log("2");
+      console.log(Array.from(updatedList));
+      setEvent(Array.from(updatedList));
+      console.log("3");
+      console.log(eventsList);
       countRef.current++;
     } catch (err) {
       console.error(err.message);
@@ -74,10 +82,29 @@ const Ledger = () => {
 
   useEffect(() => {
     const fetchEvents = async () => {
+      console.log("4");
+      console.log(eventsList);
+      /*
       let data = await fetch("http://10.100.0.2:5000/ledger");
       data = await data.json();
-      setEvent(data);
-      console.log(data.event);
+      setEvent(data.event);
+*/
+      console.log("5");
+      //     console.log(data.event);
+      console.log("6");
+      console.log(eventsList);
+      //console.log(data);
+      await axios.get("http://10.100.0.2:5000/ledger").then((response) => {
+        console.log(response);
+        const myRepo = response.data;
+
+        for (let i = 0; i < myRepo.event.length; i++) {
+          console.log(myRepo.event[i].id);
+        }
+
+        setEvent(myRepo.event);
+      });
+
       /*
       const data = await axios.get("http://10.100.0.2:5000/ledger");
       const { events } = data.data;
@@ -86,11 +113,13 @@ const Ledger = () => {
       isLoading(false);
     };
     fetchEvents();
-  }, [countRef]);
+  }, []);
   // make a nice looking loading screen
   if (loading) {
     return <h1>Loading...</h1>;
   } else {
+    console.log("7");
+    console.log(eventsList);
     return (
       <>
         <div className="panel">
@@ -112,33 +141,40 @@ const Ledger = () => {
         <div className="panel">
           <section>
             <ul>
-              {eventsList.event.map((event, index) => {
-                if (eventID === event.id) {
-                  return (
-                    <li>
-                      <form onSubmit={handleSubmit} key={event.id}>
-                        <input
-                          onChange={(e) => handleChange(e, "edit")}
-                          type="text"
-                          name="editDescription"
-                          id="editDescription"
-                          value={editDescription}
-                        />
-                        <button type="submit">Submit</button>
-                      </form>
-                    </li>
-                  );
-                } else {
-                  return (
-                    <li style={{ display: "Flex" }} key={event.id}>
-                      {event.id} {event.email} {event.cost} {event.created_at}{" "}
-                      {event.description}{" "}
-                      <button onClick={() => toggleEdit(event)}>Edit</button>
-                      <button onClick={() => handleDelete(event.id)}>X</button>
-                    </li>
-                  );
-                }
-              })}
+              {/*  after deleting, expects eventsList.map but only works once */}
+              {Array.isArray(eventsList)
+                ? eventsList.map((event, index) => {
+                    if (eventID === event.id) {
+                      return (
+                        <li key={event.id}>
+                          <form onSubmit={handleSubmit} key={event.id}>
+                            <input
+                              onChange={(e) => handleChange(e, "edit")}
+                              type="text"
+                              name="editDescription"
+                              id="editDescription"
+                              value={editDescription}
+                            />
+                            <button type="submit">Submit</button>
+                          </form>
+                        </li>
+                      );
+                    } else {
+                      return (
+                        <li style={{ display: "Flex" }} key={event.id}>
+                          {event.id} {event.email} {event.cost}{" "}
+                          {event.created_at} {event.description}{" "}
+                          <button onClick={() => toggleEdit(event)}>
+                            Edit
+                          </button>
+                          <button onClick={() => handleDelete(event.id)}>
+                            X
+                          </button>
+                        </li>
+                      );
+                    }
+                  })
+                : null}
             </ul>
           </section>
         </div>
