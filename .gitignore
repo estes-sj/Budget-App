@@ -3,3 +3,16 @@ server/server_config.txt
 server/.env
 server/.env
 server/.env
+server/.env
+# Python
+__pycache__
+server/venv
+env
+
+.vscode
+
+# React
+node_modules
+
+coverage
+
