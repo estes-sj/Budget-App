@@ -43,7 +43,7 @@ const Ledger = () => {
         setEvent(updatedList);
       } else {
         const data = await axios.post(`${baseURL}`, { description });
-        setEvent([...eventsList], data.data);
+        setEvent([...eventsList, data.data]);
       }
       setDescription("");
       setEditDescription("");
@@ -56,16 +56,8 @@ const Ledger = () => {
   const handleDelete = async (id) => {
     try {
       await axios.delete(`${baseURL}/${id}`);
-      console.log("0");
-      console.log(eventsList);
-      console.log("1");
-      console.log(Object.values(eventsList));
       const updatedList = eventsList.filter((event) => event.id !== id);
-      console.log("2");
-      console.log(Array.from(updatedList));
       setEvent(Array.from(updatedList));
-      console.log("3");
-      console.log(eventsList);
       countRef.current++;
     } catch (err) {
       console.error(err.message);
@@ -82,26 +74,21 @@ const Ledger = () => {
 
   useEffect(() => {
     const fetchEvents = async () => {
-      console.log("4");
-      console.log(eventsList);
       /*
       let data = await fetch("http://10.100.0.2:5000/ledger");
       data = await data.json();
       setEvent(data.event);
 */
-      console.log("5");
       //     console.log(data.event);
-      console.log("6");
-      console.log(eventsList);
       //console.log(data);
       await axios.get("http://10.100.0.2:5000/ledger").then((response) => {
-        console.log(response);
+        //     console.log(response);
         const myRepo = response.data;
-
+        /* 
         for (let i = 0; i < myRepo.event.length; i++) {
           console.log(myRepo.event[i].id);
         }
-
+ */
         setEvent(myRepo.event);
       });
 
@@ -118,8 +105,6 @@ const Ledger = () => {
   if (loading) {
     return <h1>Loading...</h1>;
   } else {
-    console.log("7");
-    console.log(eventsList);
     return (
       <>
         <div className="panel">
