@@ -107,6 +107,7 @@ const Ledger = () => {
   } else {
     return (
       <>
+        {/*  creating a new transaction */}
         <div className="panel">
           <header className="app-header">
             <form onSubmit={handleSubmit}>
@@ -126,9 +127,11 @@ const Ledger = () => {
         <div className="panel">
           <section>
             <ul>
-              {/*  after deleting, expects eventsList.map but only works once */}
               {Array.isArray(eventsList)
                 ? eventsList.map((event, index) => {
+                    {
+                      /*  editing a transaction */
+                    }
                     if (eventID === event.id) {
                       return (
                         <li key={event.id}>
@@ -145,13 +148,18 @@ const Ledger = () => {
                         </li>
                       );
                     } else {
+                      {
+                        /*  display all transactions */
+                      }
                       return (
                         <li style={{ display: "Flex" }} key={event.id}>
                           {event.id} {event.email} {event.cost}{" "}
                           {event.created_at} {event.description}{" "}
+                          {/*  toggle for editing a transaction */}
                           <button onClick={() => toggleEdit(event)}>
                             Edit
                           </button>
+                          {/*  button for deleting a transaction */}
                           <button onClick={() => handleDelete(event.id)}>
                             X
                           </button>
@@ -160,6 +168,7 @@ const Ledger = () => {
                     }
                   })
                 : null}
+              {/* handler for unsupported data */}
             </ul>
           </section>
         </div>

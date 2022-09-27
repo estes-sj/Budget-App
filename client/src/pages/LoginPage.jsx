@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import httpClient from "../httpClient";
 
-const LoginPage: React.FC = () => {
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+const LoginPage = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const logInUser = async () => {
     console.log(email, password);
@@ -15,7 +15,7 @@ const LoginPage: React.FC = () => {
       });
 
       window.location.href = "/";
-    } catch (error: any) {
+    } catch (error) {
       if (error.response.status === 401) {
         alert("Invalid credentials");
       }

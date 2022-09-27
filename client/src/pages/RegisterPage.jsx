@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import httpClient from "../httpClient";
 
-const RegisterPage: React.FC = () => {
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+const RegisterPage = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const registerUser = async () => {
     try {
@@ -13,7 +13,7 @@ const RegisterPage: React.FC = () => {
       });
 
       window.location.href = "/";
-    } catch (error: any) {
+    } catch (error) {
       if (error.response.status === 401) {
         alert("Invalid credentials");
       } else if (error.response.status === 409) {

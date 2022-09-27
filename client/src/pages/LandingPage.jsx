@@ -3,11 +3,11 @@ import httpClient from "../httpClient";
 import "./login.css";
 import { User } from "../types";
 
-const LandingPage: React.FC = () => {
-  const [user, setUser] = useState<User | null>(null);
+const LandingPage = () => {
+  const [user, setUser] = useState(null);
   const [isShown, setIsShown] = useState(false);
 
-  const handleClick = (_event: any) => {
+  const handleClick = (_event) => {
     // toggle shown state
     setIsShown((current) => !current);
   };
