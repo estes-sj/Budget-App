@@ -16,8 +16,8 @@ class User(db.Model):
 
 class Ledger(db.Model):
     __tablename__ = "ledger"
-    email = db.Column(db.String(345), unique=False)
     id = db.Column('transaction_id', db.Integer, primary_key = True, unique=True)
+    user_id = db.Column(db.String(345), unique=False)
     category = db.Column(db.String(345), unique=False)
     cost = db.Column(db.Numeric(10,2), unique=False)
     created_at = db.Column(db.DateTime(timezone=True),
@@ -27,11 +27,19 @@ class Ledger(db.Model):
     def __repr__(self):
         return f'Event: {self.description}'
     
-    def __init__(self, description):
+    def __init__(self, user_id, description):
+        self.user_id = user_id
         self.description = description
-    
+
     def format_data(data):
         return {
             "id": data.id,
             "description": data.description
         }
+
+        """ 
+    def __init__(self, description, email):
+        self.description = description
+        self.email = email
+     """
+    

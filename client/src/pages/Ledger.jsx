@@ -8,6 +8,7 @@ const Ledger = () => {
   const [description, setDescription] = useState("");
   const [editDescription, setEditDescription] = useState("");
   const [eventID, setEventID] = useState(null);
+  const [user, setUser] = useState(null);
 
   const [loading, isLoading] = useState(true);
   const countRef = useRef(0);
@@ -42,7 +43,11 @@ const Ledger = () => {
         });
         setEvent(updatedList);
       } else {
-        const data = await axios.post(`${baseURL}`, { description });
+        const user_id = user.id;
+        const data = await axios.post(`${baseURL}`, {
+          user_id,
+          description,
+        });
         setEvent([...eventsList, data.data]);
       }
       setDescription("");
@@ -74,6 +79,15 @@ const Ledger = () => {
 
   useEffect(() => {
     const fetchEvents = async () => {
+      // const resp = null;
+      // try {
+      const resp = await httpClient.get("//10.100.0.2:5000/@me");
+      setUser(resp.data);
+      console.log("1!");
+      console.log(resp.data);
+      //  } catch (error) {
+      //    console.log("Not authenticated");
+      //  }
       /*
       let data = await fetch("http://10.100.0.2:5000/ledger");
       data = await data.json();

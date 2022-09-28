@@ -27,10 +27,9 @@ with app.app_context():
 @app.route("/@me")
 def get_current_user():
     user_id = session.get("user_id")
-
     if not user_id:
         return jsonify({"error": "Unauthorized"}), 401
-    
+    print ("1# = " + str(session.get("user_id")))
     user = User.query.filter_by(id=user_id).first()
     return jsonify({
         "id": user.id,
@@ -54,7 +53,6 @@ def register_user():
     db.session.commit()
 
     session["user_id"] = new_user.id
-
     return jsonify({
         "id": new_user.id,
         "email": new_user.email
@@ -74,7 +72,7 @@ def login_user():
         return jsonify({"error": "Unauthorized"}), 401
     
     session["user_id"] = user.id
-
+    print ("2! =" + session.get("user_id"))
     return jsonify({
         "id": user.id,
         "email": user.email
@@ -95,15 +93,21 @@ def testdb():
 # create an event
 @app.route('/ledger', methods = ['POST'])
 def create_event():
-    description = request.json['description'];
-    event = Ledger(description)
+    print ("3# = " + str(session.get("user_id")))
+    print(request.json['user_id'])
+    userID = request.json['user_id']
+    description = request.json['description']
+    event = Ledger(userID, description)
     db.session.add(event)
     db.session.commit()
+
     return format_event(event)
 
-# get all events
+# get all events based on user logged in
 @app.route('/ledger', methods = ['GET'])
 def get_ledger():
+    #print ("^ =" + str(session))
+    #userID = request.json['user_id']
     events = Ledger.query.order_by(Ledger.id.asc()).all()
     event_list = []
     for event in events:
@@ -137,7 +141,7 @@ def update_event(id):
 def format_event(event):
     return {
         "id": event.id,
-        "email": event.email,
+        "user_id": event.user_id,
         "cost": event.cost,
         "created_at": event.created_at,
         "description": event.description
