@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import httpClient from "../httpClient";
+import axios from "axios";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -9,12 +9,14 @@ const LoginPage = () => {
     console.log(email, password);
 
     try {
-      const resp = await httpClient.post("//10.100.0.2:5000/login", {
+      const resp = await axios.post("http://10.100.0.2:5000/login", {
         email,
         password,
       });
-
-      window.location.href = "/";
+      localStorage.setItem("user", JSON.stringify(resp.data));
+      console.log("##3");
+      console.log(localStorage.getItem("user"));
+      //window.location.href = "/";
     } catch (error) {
       if (error.response.status === 401) {
         alert("Invalid credentials");

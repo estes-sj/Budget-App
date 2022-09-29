@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import httpClient from "../httpClient";
+import axios from "axios";
 
 const RegisterPage = () => {
   const [email, setEmail] = useState("");
@@ -7,7 +7,7 @@ const RegisterPage = () => {
 
   const registerUser = async () => {
     try {
-      const resp = await httpClient.post("//10.100.0.2:5000/register", {
+      const resp = await axios.post("http://10.100.0.2:5000/register", {
         email,
         password,
       });

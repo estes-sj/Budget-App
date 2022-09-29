@@ -1,5 +1,6 @@
 import configparser
 from dotenv import load_dotenv
+from datetime import datetime, timedelta, timezone
 import os
 import redis
 
@@ -14,7 +15,8 @@ dbname = config.get('Server Config', 'dbname')
 
 class ApplicationConfig:
     SECRET_KEY = os.environ["SECRET_KEY"]
-
+    JWT_SECRET_KEY = os.environ["JWT_SECRET_KEY"]
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=1)
     SQLALCHEMY_TRACK_MODIFICATIONS = True
     SQLALCHEMY_ECHO = True
     SQLALCHEMY_DATABASE_URI = userpass + basedir + dbname
